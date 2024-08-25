@@ -9,7 +9,7 @@ def expire_date(days: int):
 	return new_date
 
 def write_token(data: dict):
-	token  = encode(payload={**data, "exp": expire_date(5)}, key=getenv("SECRET"), algorithm=["HS256"])
+	token  = encode(payload={**data, "exp": expire_date(5)}, key=getenv("SECRET"), algorithm="HS256")
 	return token.encode("UTF-8")
 
 def validate_token(token, output=False):
