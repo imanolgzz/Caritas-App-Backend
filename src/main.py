@@ -2,6 +2,7 @@ from flask import Flask
 from routes.auth.login import routes_auth
 from routes.user import routes_user 
 from dotenv import load_dotenv
+from routes import initialize_app
 
 app = Flask(__name__)
 
@@ -13,5 +14,6 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 if __name__ == '__main__':
-	load_dotenv()
-	app.run(host='0.0.0.0', port = 5000, debug=True)
+    app = initialize_app()
+	  load_dotenv()
+    app.run(host='0.0.0.0', port = 5000, debug=True)
