@@ -1,5 +1,5 @@
-from flask import Blueprint, request
-from routes.middleware import write_token, validate_token
+from flask import Blueprint, request, jsonify
+from routes.jwt import write_token, validate_token
 
 auth_routes = Blueprint("auth", __name__)
 
@@ -7,7 +7,17 @@ auth_routes = Blueprint("auth", __name__)
 def login():
 	data = request.get_json()
 	if data["username"] == "Pedro":
-		return write_token(data=request.get_json())
+		try:
+			token = write_token(data=request.get_json())
+			print(token + '\n')
+			response = jsonify({"message": "success", "JWT_Token": token})
+			response.status_code = 200
+			return response
+		except:
+			response = jsonify({"message": "error loggin in"})
+			response.status_code = 400
+			return response	
+
 	
 	else:
 		response = jsonify({"message": "User not found"})

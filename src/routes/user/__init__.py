@@ -1,10 +1,10 @@
 from flask import Blueprint, request
-import routes.middleware
+import routes.jwt
 
 user_routes = Blueprint("user", __name__)
 
 @user_routes.before_request
-def verify_token_middleware():
+def verify_jwt_token():
 	token = request.headers["Authorization"].split(" ")[1]
 	return validate_token(token)
 
