@@ -1,13 +1,30 @@
-'''
-  El middleware es el código que se ejecuta antes de cada petición a una ruta
+from jwt import encode, decode, exceptions
+from datetime import datetime, timedelta
+from os import getenv
+from flask import jsonify
 
-  La funcionalidad será la siguiente:
-    Recibir el JWT desde un header
-    Decodificar el JWT
-    Enviar un mensaje de error 401 si:
-      - El JWT recibido es inválido
-      - El JWT recibido está vencido
-    Proceder retornando vacío en caso contrario, enviando como parámetro el usuario decodificado del JWT
-    a las rutas con el nombre de parámetro JWT_User, con el fin de que cada una pueda validar que se les
-    estén enviando solicitudes válidas para su token 
-'''
+def expire_date(days: int):
+	now = datetime.now()
+	new_date = now + timedelta(days)
+	return new_date
+
+def write_token(data: dict):
+	token  = encode(payload={**data, "exp": expire_date(5)}, key=getenv("SECRET"), algorithm="HS256")
+	return token.encode("UTF-8")
+
+def validate_token(token, output=False):
+	try:
+		if output:
+			return decode(token, key=getenv("SECRET"), algorithms=["HS256"])
+		decode(token, key=getenv("SECRET"), algorithms=["HS256"])
+	
+	except exceptions.DecodeError:
+		response = jsonify({"message": "Invalid Token"})
+		response.status_code = 401
+		return response
+	
+	except exceptions.ExpiredSignatureError:
+		response = jsonify({"message": "Token Expired"})
+		response.status_code = 401
+		return response
+					

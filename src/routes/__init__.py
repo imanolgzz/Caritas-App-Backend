@@ -1,8 +1,15 @@
 from flask import Flask
+from dotenv import load_dotenv
 
 def initialize_app():
   app = Flask(__name__)
-  from .auth import auth as authBlueprint
-  app.register_blueprint(authBlueprint, url_prefix="/auth") 
+  load_dotenv()
+  
+  from .auth import auth_routes 
+  app.register_blueprint(auth_routes, url_prefix="/api/auth")
+  
+  from .user import user_routes
+  app.register_blueprint(user_routes, url_prefix="/api/user")
+  
   return app
 
