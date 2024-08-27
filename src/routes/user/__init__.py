@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-import routes.jwt
+import util.jwt
 
 user_routes = Blueprint("user", __name__)
 
