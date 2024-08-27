@@ -9,16 +9,13 @@ def login():
 	if data["username"] == "Pedro":
 		try:
 			token = write_token(data=request.get_json())
-			print(token + '\n')
-			response = jsonify({"message": "success", "JWT_Token": token})
+			response = jsonify({"message": "success", "JWT_Token": token.decode("UTF-8")})
 			response.status_code = 200
 			return response
 		except:
 			response = jsonify({"message": "error loggin in"})
 			response.status_code = 400
 			return response	
-
-	
 	else:
 		response = jsonify({"message": "User not found"})
 		response.status_code = 404
