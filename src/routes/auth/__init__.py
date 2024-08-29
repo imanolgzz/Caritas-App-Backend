@@ -7,7 +7,6 @@ auth_routes = Blueprint("auth", __name__)
 def login():
 	data = request.get_json()
 	# Harcodear password también
-	print("Flag")
 	if data["username"] == "Pedro":
 		try:
 			token = write_token(data=request.get_json())
