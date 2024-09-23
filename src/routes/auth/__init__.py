@@ -5,6 +5,34 @@ auth_routes = Blueprint("auth", __name__)
 
 @auth_routes.route("/login", methods=["POST"])
 def login():
+	"""
+	Verifica que el usuario exsista en la base de datos y regresa el JWT adecuado
+	---
+	parameters:
+		- in: body
+		  username: correo
+		  password: contraseña
+		  description: Usuario
+		  schema:
+		  	type: object
+			required:
+				- username
+				- password
+			properties:
+				username:
+					type: string
+					description: Correo del usuario
+				password:
+					type: string
+					description: Contraseña del usuario
+	responses:
+		200:
+			description: "Usuario valido"
+		400:
+			description: "Error de conexion"
+		401:
+			description: "Usuario o contraña no validos"
+	"""
 	data = request.get_json()
 	# Harcodear password también
 	if data["username"] == "Pedro":
