@@ -1,6 +1,6 @@
 from flask import Flask
 from routes import initialize_app
-import os
+from os import getenv
 
 if __name__ == '__main__':
 	app = initialize_app()
