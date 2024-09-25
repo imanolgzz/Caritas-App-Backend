@@ -41,6 +41,12 @@ class MSSQLDB:
                 return False
             return True
           
+    def store(self):
+        with self.cnx.cursor(as_dict=True) as cursor:
+            cursor.callproc('GetProductosTienda', ())
+            results = cursor.fetchall()
+        return results
+
     def eventAttendance(self, USER_ID = 1, EVENT_ID = 1):
         with self.cnx.cursor(as_dict=True) as cursor:
             cursor.callproc("AgendarEvento",(USER_ID,EVENT_ID))
