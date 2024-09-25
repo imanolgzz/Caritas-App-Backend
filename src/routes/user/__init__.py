@@ -26,7 +26,6 @@ def verify_jwt_token():
 '''
 @user_routes.route("/eventosFuturos", methods=["GET"])
 def eventos():
-
 	try: 
 		eventos = None
 		with DB.cnx.cursor(as_dict=True) as cursor:

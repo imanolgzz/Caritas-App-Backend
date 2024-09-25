@@ -17,15 +17,17 @@ def initialize_app():
   from .auth import auth_routes 
   app.register_blueprint(auth_routes, url_prefix="/api/auth")
   
-  from .user import user_routes
+  from .events import user_routes
   app.register_blueprint(user_routes, url_prefix="/api/user")
 
   from .attendace import attendance_routes
   app.register_blueprint(attendance_routes,url_prefix= "/api/attendance")
   
-  
   from .store import store_routes
   app.register_blueprint(store_routes, url_prefix="/api/store")
+  
+  from .events import event_routes
+  app.register_blueprint(event_routes, url_prefix="/api/events")
   
   return app
 
