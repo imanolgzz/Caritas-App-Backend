@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
 from util.db_connection import DB
 
-auth_routes = Blueprint("store", __name__)
+store_routes = Blueprint("store", __name__)
 
-@auth_routes.route("/products", methods=["GET"])
+@store_routes.route("/products", methods=["GET"])
 def products():
     """
     Obtener todos los productos redimibles de la tienda

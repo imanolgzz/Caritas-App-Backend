@@ -24,8 +24,8 @@ def initialize_app():
   app.register_blueprint(attendance_routes,url_prefix= "/api/attendance")
   
   
-  from .store import redeem_routes
-  app.register_blueprint(redeem_routes, url_prefix="/api/store")
+  from .store import store_routes
+  app.register_blueprint(store_routes, url_prefix="/api/store")
   
   return app
 
