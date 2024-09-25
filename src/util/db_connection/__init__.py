@@ -1,6 +1,6 @@
 import pymssql
 import dotenv
-import os
+from os import getenv
 
 class MSSQLDB:
     cnx = None
