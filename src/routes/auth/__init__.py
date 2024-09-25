@@ -41,7 +41,6 @@ def login():
 					JWT_Token:
 						type: string
 						example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-
 		400:
 		  description: Error de conexion
 		  content:
@@ -82,14 +81,40 @@ def login():
 		return response
 
 def register():
-	data = request.get_json()
-	with DB.cnx.cursor(as_dict=True) as cursor:
-		cursor.callproc('CheckLogin', (user, password))
-		message = (cursor.fetchall()[0]['Message'])
-		if message == "Invalid email or password":
-			return False
-		return True
+	try:
+		data = request.get_json()
+		username = data["username"]
+		password = data["password"]
+		email = data["email"]
+		name = data["name"]
+		first_lastname = data["first_lastname"]
+		second_lastname = data["second_lastname"]
 
+		# validate that all fields are presented
+		if not username or not password or not email or not name or not first_lastname or not second_lastname:
+			return jsonify({"message": "All fields are required"}), 400
+
+		# validate that the email is not already in use
+		alreadyExists = False
+		with DB.cnx.cursor(as_dict=True) as cursor:
+			cursor.callproc('CheckUserExists', (user, password))
+			message = (cursor.fetchall()[0]['Message'])
+			if message != "Invalid email or password":
+				alreadyExists = True
+		
+		if alreadyExists:
+			return jsonify({"message": "User already exists"}), 400
+
+		# register the user
+		with DB.cnx.cursor(as_dict=True) as cursor:
+			cursor.callproc('RegisterUser', (username, password, email, name, first_lastname, second_lastname))
+			message = (cursor.fetchall()[0]['Message'])
+			if message != "User registered":
+				return jsonify({"message": "Error registering user"}), 400
+
+		return jsonify({"message": "User registered, successfully"}), 200
+	except Exception as e:
+		return jsonify({"message": "Error: " + str(e)}), 500
 
 
 @auth_routes.route("/verify/token")
