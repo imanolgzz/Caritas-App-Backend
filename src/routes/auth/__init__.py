@@ -50,6 +50,14 @@ def login():
 		response.status_code = 404
 		return response
 
+def login(self, user = "Adrian", password="Adrian"):
+	with DB.cnx.cursor(as_dict=True) as cursor:
+		cursor.callproc('CheckLogin', (user, password))
+		message = (cursor.fetchall()[0]['Message'])
+		if message == "Invalid email or password":
+			return False
+		return True
+
 @auth_routes.route("/verify/token")
 def verify():
 	token = request.headers["Authorization"].split(" ")[1]
