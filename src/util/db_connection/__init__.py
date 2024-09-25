@@ -46,6 +46,12 @@ class MSSQLDB:
             cursor.callproc('GetProductosTienda', ())
             results = cursor.fetchall()
         return results
+    
+    def eventosFuturos(self):
+        with self.cnx.cursor(as_dict=True) as cursor:
+            cursor.callproc('GetEventosFuturosOrdenadosPorFecha', ())
+            results = cursor.fetchall()
+        return results
 
     def eventAttendance(self, USER_ID = 1, EVENT_ID = 1):
         with self.cnx.cursor(as_dict=True) as cursor:

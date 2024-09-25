@@ -23,9 +23,11 @@ def initialize_app():
   from .attendace import attendance_routes
   app.register_blueprint(attendance_routes,url_prefix= "/api/attendance")
   
-  
   from .store import store_routes
   app.register_blueprint(store_routes, url_prefix="/api/store")
+  
+  from .events import event_routes
+  app.register_blueprint(event_routes, url_prefix="/api/events")
   
   return app
 
