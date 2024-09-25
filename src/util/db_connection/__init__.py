@@ -36,3 +36,5 @@ class MSSQLDB:
             if message == "Invalid email or password":
                 return False
             return True
+
+DB = MSSQLDB()
