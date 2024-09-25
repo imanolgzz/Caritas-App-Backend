@@ -84,6 +84,7 @@ def login():
 def login(self, user = "Adrian", password="Adrian"):
 	with DB.cnx.cursor(as_dict=True) as cursor:
 		cursor.callproc('CheckLogin', (user, password))
+		print(cursor.fetchall)
 		message = (cursor.fetchall()[0]['Message'])
 		if message == "Invalid email or password":
 			return False
@@ -103,23 +104,18 @@ def register():
 			required:
 				- username
 				- password
-				- email
 				- name
 				- first_lastname
 				- second_lastname
 			properties:
 				username:
 					type: string
-					description: Nombre de usuario
-					example: Imanol
+					description: Correo Electrónico del usuario
+					example: Imanol@mail.com
 				password:
 					type: string
 					description: Contraseña del usuario
 					example: Imanol@Pass
-				email:
-					type: string
-					description: Correo electrónico del usuario
-					example: Imanol@mail.com
 				name:
 					type: string
 					description: Nombre del usuario
@@ -168,30 +164,30 @@ def register():
 		data = request.get_json()
 		username = data["username"]
 		password = data["password"]
-		email = data["email"]
 		name = data["name"]
 		first_lastname = data["first_lastname"]
 		second_lastname = data["second_lastname"]
 
 		# validate that all fields are presented
-		if not username or not password or not email or not name or not first_lastname or not second_lastname:
+		if not username or not password or not name or not first_lastname or not second_lastname:
 			return jsonify({"message": "All fields are required"}), 400
-
+		
 		# validate that the email is not already in use
 		alreadyExists = False
+		email = username
 		with DB.cnx.cursor(as_dict=True) as cursor:
-			cursor.callproc('CheckUserExists', (username, password))
-			message = (cursor.fetchall()[0]['Message'])
-			if message != "Invalid email or password":
+			cursor.callproc('CheckUserExists', [email])
+			message = (cursor.fetchall()[0]['UserExists'])
+			if message != False:
 				alreadyExists = True
 		
 		if alreadyExists:
 			return jsonify({"message": "User already exists"}), 400
-
 		# register the user
 		with DB.cnx.cursor(as_dict=True) as cursor:
-			cursor.callproc('RegisterUser', (username, password, email, name, first_lastname, second_lastname))
+			cursor.callproc('RegisterUser', (username, password, name, first_lastname, second_lastname, "NULL", 0, 0, 0))
 			message = (cursor.fetchall()[0]['Message'])
+			print(message)
 			if message != "User registered":
 				return jsonify({"message": "Error registering user"}), 400
 		return jsonify({"message": "User registered successfully"}), 200
