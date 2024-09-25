@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from util.jwt import write_token, validate_token
-form ...main import DB
+from ...main import DB
 
 auth_routes = Blueprint("auth", __name__)
 
