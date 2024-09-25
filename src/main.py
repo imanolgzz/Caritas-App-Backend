@@ -1,8 +1,5 @@
 from flask import Flask
 from routes import initialize_app
-from util.db_connection import MSSQLDB
-
-DB = MSSQLDB()
 
 if __name__ == '__main__':
 	app = initialize_app()
