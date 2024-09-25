@@ -11,6 +11,9 @@ class MSSQLDB:
         self.mssql_params['DB_PASSWORD'] = password
         self.mssql_params['DB_PORT'] = port
 
+        # Connect to database on start
+        self.connect()
+
     def connect(self):
         try:
             self.cnx = pymssql.connect(
@@ -19,13 +22,16 @@ class MSSQLDB:
                 password=self.mssql_params['DB_PASSWORD'],
                 database=self.mssql_params['DB_NAME'],
                 port=self.mssql_params['DB_PORT'])
-            
+            print(f"!!!!\n Successfully connected to {self.mssql_params['DB_NAME']}")
         
         except Exception as e:
             import sys
-            sys.exit("Cannot connect to mssql server!: {}".format(e))
+            sys.exit(f"Can not connect to mssql server on {self.mssql_params['DB_HOST']}: {e}")
 
     def login(self, user = "Adrian", password="Adrian"):
         with self.cnx.cursor(as_dict=True) as cursor:
             cursor.callproc('CheckLogin', (user, password))
-            print(cursor)
+            message = (cursor.fetchall()[0]['Message'])
+            if message == "Invalid email or password":
+                return False
+            return True

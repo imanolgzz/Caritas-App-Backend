@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from util.jwt import write_token, validate_token
+form ...main import DB
 
 auth_routes = Blueprint("auth", __name__)
 
@@ -35,7 +36,7 @@ def login():
 	"""
 	data = request.get_json()
 	# Harcodear password también
-	if data["username"] == "Pedro":
+	if DB.login(data["username"], data["password"]):
 		try:
 			token = write_token(data=request.get_json())
 			response = jsonify({"message": "success", "JWT_Token": token.decode("UTF-8")})
