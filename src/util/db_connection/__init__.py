@@ -13,7 +13,7 @@ class MSSQLDB:
 
         # Connect to database on start
         self.connect()
-        print(__name__)
+        print(self.cnx)
 
     def connect(self):
         try:
