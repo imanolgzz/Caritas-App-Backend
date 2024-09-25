@@ -5,24 +5,24 @@ attendance_routes = Blueprint("attendance", __name__)
 
 @attendance_routes.route("/attendance", methods=["POST"])
 def attendance():
-    """
+	"""
 	Realiza el registro de asistencia de un usuario a un evento determinado.
 	---
 	parameters:
 		- in: body
-		  ID_USUARIO: ID_USER
-		  description: ID usuario
+		  name: ID_USER
+		  description: ID_USER 
 		  schema:
 		  	type: object
 			required:
-				- USER ID
-				- EVENT ID
+				- USUARIO_ID
+				- EVENTO_ID
 			properties:
-				ID_USER:
+				USUARIO_ID:
 					type: int
 					description: ID del usuario
 					example: 1
-				ID_EVENT:
+				EVENTO_ID:
 					type: int
 					description: ID del evento al que se estará registrando
 					example: 1
@@ -60,21 +60,19 @@ def attendance():
 						type: string
 						example: ID de usuario o evento no válido
 	"""
+	data = request.get_json()
 
-
-    data = request.get_json()
-
-    if DB.eventAttendance(data["ID_USUARIO"], data["ID_EVENTO"]):
-        try:
-            response = jsonify({"message":"Usuario registrado con éxito"})
-            response.status_code = 200
-            return response
-        
-        except:
-            response = jsonify({"message":"Error en registrar usuario"})
-            response.status_code = 400
-            return response 
-    else:
-        response = jsonify({"message":"Evento no encontrado"})
-        response.status_code = 400
-        return response
+	if DB.eventAttendance(data["USUARIO_ID"], data["EVENTO_ID"]):
+			try:
+					response = jsonify({"message":"Usuario registrado con éxito"})
+					response.status_code = 200
+					return response
+			
+			except:
+					response = jsonify({"message":"Error en registrar usuario"})
+					response.status_code = 400
+					return response 
+	else:
+			response = jsonify({"message":"Evento no encontrado"})
+			response.status_code = 400
+			return response

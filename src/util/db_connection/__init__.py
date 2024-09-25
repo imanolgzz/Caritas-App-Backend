@@ -37,6 +37,7 @@ class MSSQLDB:
         with self.cnx.cursor(as_dict=True) as cursor:
             cursor.callproc('CheckLogin', (user, password))
             message = (cursor.fetchall()[0]['Message'])
+            print(message)
             if message == "Invalid email or password":
                 return False
             return True
@@ -53,10 +54,10 @@ class MSSQLDB:
             results = cursor.fetchall()
         return results
 
-    def eventAttendance(self, USER_ID = 1, EVENT_ID = 1):
+    def eventAttendance(self, USER_ID , EVENT_ID):
         with self.cnx.cursor(as_dict=True) as cursor:
             cursor.callproc("AgendarEvento",(USER_ID,EVENT_ID))
-            message = (cursor.fetchall()[0]['Message'])
+            message = (cursor.fetchone()['Message'])
             if message == "ID de usuario o evento no válido":
                 return False
             return True
