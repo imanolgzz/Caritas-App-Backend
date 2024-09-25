@@ -9,23 +9,22 @@ def login():
 	"""
 	Verifica que el usuario exsista en la base de datos y regresa el JWT adecuado
 	---
-	parameters:
-		- in: body
-		  username: correo
-		  password: contraseña
-		  description: Usuario
-		  schema:
-		  	type: object
-			required:
-				- username
-				- password
-			properties:
-				username:
-					type: string
-					description: Correo del usuario
-				password:
-					type: string
-					description: Contraseña del usuario
+	requestBody:
+		requried: true
+		content:
+			application/json:
+		  		schema:
+					type: object
+					required:
+						- username
+						- password
+					properties:
+						username:
+							type: string
+							description: Correo del usuario
+						password:
+							type: string
+							description: Contraseña del usuario
 	responses:
 		200:
 			description: "Usuario valido"
