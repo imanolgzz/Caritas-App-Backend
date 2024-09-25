@@ -6,6 +6,7 @@ user_routes = Blueprint("user", __name__)
 @user_routes.before_request
 def verify_jwt_token():
 	data = request.get_json()
+	print(data)
 	token = request.headers["Authorization"].split(" ")[1]
 	validation = validate_token(token, True)
 	response = None

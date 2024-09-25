@@ -10,6 +10,9 @@ def initialize_app():
   
   from .user import user_routes
   app.register_blueprint(user_routes, url_prefix="/api/user")
+
+  from .attendace import attendance_routes
+  app.register_blueprint(attendance_routes,url_prefix= "/api/attendance")
   
   return app
 
