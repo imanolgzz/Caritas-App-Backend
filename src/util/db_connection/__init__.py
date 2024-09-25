@@ -1,11 +1,13 @@
 import pymssql
 import dotenv
-import os
+from os import getenv
 
 class MSSQLDB:
     cnx = None
 
-    def __init__(self, host = getenv('DB_HOST'), DB = getenv('DB_NAME'), user = getenv('DB_USER'), password = getenv('DB_PASSWORD'), port = getenv('DB_PORT')) -> None:
+    def __init__(self, host = getenv('DB_HOST_PROD'), DB = getenv('DB_NAME_PROD'), user = getenv('DB_USER_PROD'), password = getenv('DB_PASSWORD_PROD'), port = getenv('DB_PORT_PROD')) -> None:
+        # print all the params
+        print(host, DB, user, password, port)
         self.mssql_params = {}
         self.mssql_params['DB_HOST'] = host
         self.mssql_params['DB_NAME'] = DB

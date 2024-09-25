@@ -1,6 +1,7 @@
 from flask import Flask
 from routes import initialize_app
+from os import getenv
 
 if __name__ == '__main__':
 	app = initialize_app()
-	app.run(host='0.0.0.0', port = 10205, debug=True)
+	app.run(host=getenv("API_HOST"), port = getenv("API_PORT"), debug=True)
