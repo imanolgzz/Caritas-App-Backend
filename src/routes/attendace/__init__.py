@@ -64,7 +64,7 @@ def attendance():
 
     data = request.get_json()
 
-    if DB.eventAttendance(data["ID_USUARIO", data["ID_EVENTO"]]):
+    if DB.eventAttendance(data["ID_USUARIO"], data["ID_EVENTO"]):
         try:
             response = jsonify({"message":"Usuario registrado con éxito"})
             response.status_code = 200
