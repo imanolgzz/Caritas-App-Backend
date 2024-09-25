@@ -80,6 +80,15 @@ def login():
 		response.status_code = 404
 		return response
 
+
+def login(self, user = "Adrian", password="Adrian"):
+	with DB.cnx.cursor(as_dict=True) as cursor:
+		cursor.callproc('CheckLogin', (user, password))
+		message = (cursor.fetchall()[0]['Message'])
+		if message == "Invalid email or password":
+			return False
+		return True
+  
 def register():
 	try:
 		data = request.get_json()
@@ -111,11 +120,9 @@ def register():
 			message = (cursor.fetchall()[0]['Message'])
 			if message != "User registered":
 				return jsonify({"message": "Error registering user"}), 400
-
 		return jsonify({"message": "User registered, successfully"}), 200
 	except Exception as e:
 		return jsonify({"message": "Error: " + str(e)}), 500
-
 
 @auth_routes.route("/verify/token")
 def verify():
