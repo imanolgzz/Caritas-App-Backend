@@ -1,9 +1,11 @@
 import pymssql
+import dotenv
+import os
 
 class MSSQLDB:
     cnx = None
 
-    def __init__(self, host = '100.80.80.7', DB = 'CaritasDB', user = 'SA', password = 'Shakira123.', port = '1433') -> None:
+    def __init__(self, host = getenv('DB_HOST'), DB = getenv('DB_NAME'), user = getenv('DB_USER'), password = getenv('DB_PASSWORD'), port = getenv('DB_PORT')) -> None:
         self.mssql_params = {}
         self.mssql_params['DB_HOST'] = host
         self.mssql_params['DB_NAME'] = DB
@@ -13,7 +15,7 @@ class MSSQLDB:
 
         # Connect to database on start
         self.connect()
-        print(__name__)
+        print(self.cnx)
 
     def connect(self):
         try:

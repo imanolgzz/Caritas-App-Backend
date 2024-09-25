@@ -11,7 +11,7 @@ def login():
 	---
 	parameters:
 		- in: body
-		  user: Usuario
+		  name: Usuario
 		  description: Usuario
 		  schema:
 		  	type: object
@@ -22,27 +22,58 @@ def login():
 				username:
 					type: string
 					description: Correo del usuario
+					example: Adrian@mail.com
 				password:
 					type: string
 					description: Contraseña del usuario
+					example: Adrian@Pass
 	responses:
 		200:
-			description: "Usuario valido"
+		  description: Usuario valido
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: Success
+					JWT_Token:
+						type: string
+						example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
 		400:
-			description: "Error de conexion"
-		401:
-			description: "Usuario o contraña no validos"
+		  description: Error de conexion
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: Error loggin in
+		
+		404:
+		  description: Usuario o contraña no validos
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: User not found
 	"""
 	data = request.get_json()
 	# Harcodear password también
 	if DB.login(data["username"], data["password"]):
 		try:
-			token = write_token(data=request.get_json())
-			response = jsonify({"message": "success", "JWT_Token": token.decode("UTF-8")})
+			token = write_token(data)
+			response = jsonify({"message": "Success", "JWT_Token": token.decode("UTF-8")})
 			response.status_code = 200
 			return response
 		except:
-			response = jsonify({"message": "error loggin in"})
+			response = jsonify({"message": "Error loggin in"})
 			response.status_code = 400
 			return response	
 	else:
@@ -50,7 +81,17 @@ def login():
 		response.status_code = 404
 		return response
 
+
 def login(self, user = "Adrian", password="Adrian"):
+	with DB.cnx.cursor(as_dict=True) as cursor:
+		cursor.callproc('CheckLogin', (user, password))
+		message = (cursor.fetchall()[0]['Message'])
+		if message == "Invalid email or password":
+			return False
+		return True
+  
+def register():
+	data = request.get_json()
 	with DB.cnx.cursor(as_dict=True) as cursor:
 		cursor.callproc('CheckLogin', (user, password))
 		message = (cursor.fetchall()[0]['Message'])
