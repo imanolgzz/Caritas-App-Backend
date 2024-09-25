@@ -3,8 +3,9 @@ from util.jwt import validate_token
 from util.db_connection import DB
 
 user_routes = Blueprint("user", __name__)
-
+'''
 @user_routes.before_request
+
 def verify_jwt_token():
 	data = request.get_json()
 	print(data)
@@ -20,16 +21,21 @@ def verify_jwt_token():
 			response.status_code = 401
 	except:
 		response = jsonify({"error": "anauthorized"})
-		response.status_code = 401
 	return response
-
-@user_routes.route("/eventosFuturos")
+		response.status_code = 401
+'''
+@user_routes.route("/eventosFuturos", methods=["GET"])
 def eventos():
-	with DB.cnx.cursor(as_dict=True) as cursor:
-		cursor.callproc('GetEventosFuturosOrdenadosPorFecha')
-		eventos = cursor.fetchall()
-		print(eventos)
-		return eventos
+
+	try: 
+		eventos = None
+		with DB.cnx.cursor(as_dict=True) as cursor:
+			cursor.callproc('GetEventosFuturosOrdenadosPorFecha')
+			eventos = cursor.fetchall()
+		return jsonify({"eventosFuturos": eventos}), 201
+	except:
+		return jsonify({"message": "Error al intentar procesar los eventos futuros"}), 500 
+	
 
 @user_routes.route("/cuestionarioPorTipo")
 def cuestionario():
