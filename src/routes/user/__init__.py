@@ -8,6 +8,7 @@ def verify_jwt_token():
 	data = request.get_json()
 	print(data)
 	token = request.headers["Authorization"].split(" ")[1]
+	print(token)
 	validation = validate_token(token, True)
 	response = None
 	try:

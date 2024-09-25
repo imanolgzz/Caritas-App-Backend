@@ -2,7 +2,6 @@ from flask import Flask
 from dotenv import load_dotenv
 from flasgger import Swagger
 
-
 def initialize_app():
   load_dotenv()
   app = Flask(__name__)
@@ -23,6 +22,7 @@ def initialize_app():
 
   from .attendace import attendance_routes
   app.register_blueprint(attendance_routes,url_prefix= "/api/attendance")
+  
   
   
   return app

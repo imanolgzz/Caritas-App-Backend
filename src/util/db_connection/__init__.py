@@ -1,9 +1,13 @@
 import pymssql
+import dotenv
+from os import getenv
 
 class MSSQLDB:
     cnx = None
 
-    def __init__(self, host = '100.80.80.7', DB = 'CaritasDB', user = 'SA', password = 'Shakira123.', port = '1433') -> None:
+    def __init__(self, host = getenv('DB_HOST_PROD'), DB = getenv('DB_NAME_PROD'), user = getenv('DB_USER_PROD'), password = getenv('DB_PASSWORD_PROD'), port = getenv('DB_PORT_PROD')) -> None:
+        # print all the params
+        print(host, DB, user, password, port)
         self.mssql_params = {}
         self.mssql_params['DB_HOST'] = host
         self.mssql_params['DB_NAME'] = DB
@@ -36,7 +40,7 @@ class MSSQLDB:
             if message == "Invalid email or password":
                 return False
             return True
-
+          
     def eventAttendance(self, USER_ID = 1, EVENT_ID = 1):
         with self.cnx.cursor(as_dict=True) as cursor:
             cursor.callproc("AgendarEvento",(USER_ID,EVENT_ID))
@@ -44,5 +48,5 @@ class MSSQLDB:
             if message == "ID de usuario o evento no válido":
                 return False
             return True
-    
+
 DB = MSSQLDB()
