@@ -7,7 +7,9 @@ user_routes = Blueprint("user", __name__)
 @user_routes.before_request
 def verify_jwt_token():
 	data = request.get_json()
+	print(data)
 	token = request.headers["Authorization"].split(" ")[1]
+	print(token)
 	validation = validate_token(token, True)
 	response = None
 	try:
@@ -22,23 +24,24 @@ def verify_jwt_token():
 	return response
 
 @user_routes.route("/eventosFuturos")
-def data():
+def eventos():
 	with DB.cnx.cursor(as_dict=True) as cursor:
-		cursor.callproc('GetEventosFuturosOrdenadosPorFecha', (1))
+		cursor.callproc('GetEventosFuturosOrdenadosPorFecha')
 		eventos = cursor.fetchall()
 		print(eventos)
 		return eventos
 
 @user_routes.route("/cuestionarioPorTipo")
-def data():
+def cuestionario():
 	with DB.cnx.cursor(as_dict=True) as cursor:
-		cursor.callproc('GetQuestionsBasedOnType')
+		cursor.callproc('GetQuestionsBasedOnType', (1))
 		eventos = cursor.fetchall()
 		print(eventos)
 		return eventos
 
 @user_routes.route("/opcionRespuestas")
-def data():
+
+def respuestas():
 	with DB.cnx.cursor(as_dict=True) as cursor:
 		cursor.callproc('GetChoices')
 		eventos = cursor.fetchall()
