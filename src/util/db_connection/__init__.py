@@ -36,8 +36,7 @@ class MSSQLDB:
     def login(self, user = "Adrian", password="Adrian"):
         with self.cnx.cursor(as_dict=True) as cursor:
             cursor.callproc('CheckLogin', (user, password))
-            # message = (cursor.fetchall()[0]['Message'])
-            message = (cursor.fetchall())
+            message = (cursor.fetchall()[0]['Message'])
             print(message)
             if message == "Invalid email or password":
                 return False

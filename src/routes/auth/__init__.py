@@ -81,15 +81,6 @@ def login():
 		return response
 
 
-def login(self, user = "Adrian", password="Adrian"):
-	with DB.cnx.cursor(as_dict=True) as cursor:
-		cursor.callproc('CheckLogin', (user, password))
-		print(cursor.fetchall)
-		message = (cursor.fetchall()[0]['Message'])
-		if message == "Invalid email or password":
-			return False
-		return True
-
 @auth_routes.route("/register", methods=["POST"])
 def register():
 	"""
