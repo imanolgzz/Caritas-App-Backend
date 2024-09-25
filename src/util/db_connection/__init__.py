@@ -13,6 +13,7 @@ class MSSQLDB:
 
         # Connect to database on start
         self.connect()
+        print(__name__)
 
     def connect(self):
         try:
@@ -22,7 +23,7 @@ class MSSQLDB:
                 password=self.mssql_params['DB_PASSWORD'],
                 database=self.mssql_params['DB_NAME'],
                 port=self.mssql_params['DB_PORT'])
-            print(f"!!!!\n Successfully connected to {self.mssql_params['DB_NAME']}")
+            print(f"!!!!\nSuccessfully connected to {self.mssql_params['DB_NAME']}")
         
         except Exception as e:
             import sys
