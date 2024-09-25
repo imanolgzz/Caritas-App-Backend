@@ -88,8 +88,82 @@ def login(self, user = "Adrian", password="Adrian"):
 		if message == "Invalid email or password":
 			return False
 		return True
-  
+
+@auth_routes.route("/register", methods=["POST"])
 def register():
+	"""
+	Registra un nuevo usuario en la base de datos
+	---
+	parameters:
+		- in: body
+		  name: Usuario
+		  description: Datos del usuario a registrar
+		  schema:
+		  	type: object
+			required:
+				- username
+				- password
+				- email
+				- name
+				- first_lastname
+				- second_lastname
+			properties:
+				username:
+					type: string
+					description: Nombre de usuario
+					example: Imanol
+				password:
+					type: string
+					description: Contraseña del usuario
+					example: Imanol@Pass
+				email:
+					type: string
+					description: Correo electrónico del usuario
+					example: Imanol@mail.com
+				name:
+					type: string
+					description: Nombre del usuario
+					example: Imanol
+				first_lastname:
+					type: string
+					description: Primer apellido del usuario
+					example: González
+				second_lastname:
+					type: string
+					description: Segundo apellido del usuario
+					example: Solís
+	responses:
+		200:
+		  description: Usuario registrado exitosamente
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: User registered successfully
+		400:
+		  description: Faltan datos requeridos o el usuario ya existe
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: User already exists
+		500:
+		  description: Error interno en el servidor
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: Error registering user
+	"""
 	try:
 		data = request.get_json()
 		username = data["username"]
@@ -106,7 +180,7 @@ def register():
 		# validate that the email is not already in use
 		alreadyExists = False
 		with DB.cnx.cursor(as_dict=True) as cursor:
-			cursor.callproc('CheckUserExists', (user, password))
+			cursor.callproc('CheckUserExists', (username, password))
 			message = (cursor.fetchall()[0]['Message'])
 			if message != "Invalid email or password":
 				alreadyExists = True
@@ -120,9 +194,10 @@ def register():
 			message = (cursor.fetchall()[0]['Message'])
 			if message != "User registered":
 				return jsonify({"message": "Error registering user"}), 400
-		return jsonify({"message": "User registered, successfully"}), 200
+		return jsonify({"message": "User registered successfully"}), 200
 	except Exception as e:
 		return jsonify({"message": "Error: " + str(e)}), 500
+
 
 @auth_routes.route("/verify/token")
 def verify():
