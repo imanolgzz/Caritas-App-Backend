@@ -65,17 +65,17 @@ class MSSQLDB:
     def redeem(self, USER_ID=31, PRODUCT_ID=1):
         try:
             with self.cnx.cursor(as_dict=True) as cursor:
-                # Define the output parameter
+                # Call the stored procedure
                 cursor.callproc("RealizarCompra", (USER_ID, PRODUCT_ID))
-                row = cursor.fetchone()
-                if row is not None:
-                    status = row.get('ReturnStatus')
-                    return status
-                else:
-                    return None  # or some default value or error message
+            
+                # Fetch the single result
+                result = cursor.fetchone()
+                if result is not None:
+                    return result['Status']  # Return the Status
+                return None  # or some default value if no status was returned
         except Exception as e:
             # Handle exceptions (e.g., log the error, re-raise, etc.)
             print(f"An error occurred: {e}")
-            return None  # or some default value or error message
+            return None  # or some default value or error message 
 
 DB = MSSQLDB()
