@@ -10,19 +10,19 @@ def attendance():
 	---
 	parameters:
 		- in: body
-		  name: ID_USER
-		  description: ID_USER 
+		  name: ID_USUARIO
+		  description: ID_USUARIO 
 		  schema:
 		  	type: object
 			required:
-				- USUARIO_ID
-				- EVENTO_ID
+				- ID_USUARIO
+				- ID_EVENTO
 			properties:
-				USUARIO_ID:
+				ID_USUARIO:
 					type: int
 					description: ID del usuario
 					example: 1
-				EVENTO_ID:
+				ID_EVENTO:
 					type: int
 					description: ID del evento al que se estará registrando
 					example: 1
@@ -49,8 +49,8 @@ def attendance():
 						type: string
 						example: Error en conexión
 		
-		400:
-		  description: Evento o usuario no válido
+		404:
+		  description: El evento ya está registrado
 		  content:
 			application/json:
 			  schema:
@@ -62,7 +62,7 @@ def attendance():
 	"""
 	data = request.get_json()
 
-	if DB.eventAttendance(data["USUARIO_ID"], data["EVENTO_ID"]):
+	if DB.eventAttendance(data["ID_USUARIO"], data["ID_EVENTO"]):
 			try:
 					response = jsonify({"message":"Usuario registrado con éxito"})
 					response.status_code = 200
@@ -73,6 +73,6 @@ def attendance():
 					response.status_code = 400
 					return response 
 	else:
-			response = jsonify({"message":"Evento no encontrado"})
-			response.status_code = 400
+			response = jsonify({"message":"El evento ya está registrado"})
+			response.status_code = 404
 			return response
