@@ -60,14 +60,79 @@ def products():
                     example: "No se encontraron productos"
     """
 
-    products = DB.store()
+@store_routes.route("/redeem", methods=["POST"])
+def redeem():
+    """
+    Verifica que el usuario exsista en la base de datos y regresa el JWT adecuado
+    ---
+    parameters:
+        - in: body
+          name: Usuario
+          description: Usuario
+          schema:
+            type: object
+            required:
+                - username
+                - password
+            properties:
+                username:
+                    type: string
+                    description: Correo del usuario
+                    example: Adrian@mail.com
+                password:
+                    type: string
+                    description: Contraseña del usuario
+                    example: Adrian@Pass
+    responses:
+        200:
+          description: Usuario valido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    message:
+                        type: string
+                        example: Success
+                    JWT_Token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        400:
+          description: Error de conexion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    message:
+                        type: string
+                        example: Error loggin in
+    
+        404:
+          description: Usuario o contraña no validos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    message:
+                        type: string
+                        example: User not found
+    """
 
-    if products:
-        response = jsonify(products)
+    data = request.get_json()
+
+    try:
+        status = DB.redeem(data["ID_PRODUCT"])
+        messages = {
+            0: "Compra realizada con éxito.",
+            1: "Puntos insuficientes.",
+            2: "Usuario o producto no encontrado."
+        }
+
+        response = jsonify({"message": messages.get(status, "Unknown status code.")})
         response.status_code = 200
-        return response
-
-    else:
-        response = jsonify({ "message": "Error loggin in" })
-        response.status_code = 400
-        return response
+    except:
+        response = jsonify({"message": "ID_PRODUCT not provided or error"})
+    
+    return response

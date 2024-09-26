@@ -61,4 +61,11 @@ class MSSQLDB:
                 return False
             return True
 
+    def redeem(self, PRODUCT_ID = 1):
+        with self.cnx.cursor(as_dict=True) as cursor:
+            cursor.callproc("RealizarCompra", (PRODUCT_ID))
+            row = cursor.fetchone()
+            status = row.ReturnStatus
+            return status
+
 DB = MSSQLDB()
