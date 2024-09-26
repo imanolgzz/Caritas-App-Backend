@@ -54,12 +54,13 @@ class MSSQLDB:
             results = cursor.fetchall()
         return results
 
-    def eventAttendance(self, USER_ID , EVENT_ID):
+    def eventAttendance(self, ID_USUARIO , ID_EVENTO):
         with self.cnx.cursor(as_dict=True) as cursor:
-            cursor.callproc("AgendarEvento",(USER_ID,EVENT_ID))
+            cursor.callproc("AgendarEvento",(ID_USUARIO,ID_EVENTO))
             message = (cursor.fetchone()['Message'])
-            if message == "ID de usuario o evento no válido":
+            if message == "ID de usuario o evento no válido" or message == "El usuario ya está registrado":
                 return False
+
             return True
 
     def redeem(self, PRODUCT_ID = 1):
