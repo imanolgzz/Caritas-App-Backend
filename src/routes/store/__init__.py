@@ -75,29 +75,29 @@ def products():
 @store_routes.route("/redeem", methods=["POST"])
 def redeem():
     """
-    Verifica que el usuario exsista en la base de datos y regresa el JWT adecuado
+    Canjear un producto para un usuario.
     ---
     parameters:
         - in: body
-          name: Usuario
-          description: Usuario
+          name: SolicitudDeCanje
+          description: Cuerpo de la solicitud para canjear un producto
           schema:
             type: object
             required:
-                - username
-                - password
+                - ID_USER
+                - ID_PRODUCT
             properties:
-                username:
+                ID_USER:
                     type: string
-                    description: Correo del usuario
-                    example: Adrian@mail.com
-                password:
+                    description: ID del usuario
+                    example: 12345
+                ID_PRODUCT:
                     type: string
-                    description: Contraseña del usuario
-                    example: Adrian@Pass
+                    description: ID del producto
+                    example: 67890
     responses:
         200:
-          description: Usuario valido
+          description: Compra exitosa
           content:
             application/json:
               schema:
@@ -105,12 +105,9 @@ def redeem():
                 properties:
                     message:
                         type: string
-                        example: Success
-                    JWT_Token:
-                        type: string
-                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                        example: Compra exitosa.
         400:
-          description: Error de conexion
+          description: Solicitud incorrecta
           content:
             application/json:
               schema:
@@ -118,10 +115,9 @@ def redeem():
                 properties:
                     message:
                         type: string
-                        example: Error loggin in
-    
+                        example: Puntos insuficientes o Cantidad insuficiente.
         404:
-          description: Usuario o contraña no validos
+          description: Usuario o producto no encontrado
           content:
             application/json:
               schema:
@@ -129,22 +125,45 @@ def redeem():
                 properties:
                     message:
                         type: string
-                        example: User not found
+                        example: Usuario o producto no encontrado.
+        500:
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    message:
+                        type: string
+                        example: ID_PRODUCT o ID_USER no proporcionado o error.
     """
 
     data = request.get_json()
 
     try:
-        status = DB.redeem(data["ID_PRODUCT"])
+        status = DB.redeem(data["ID_USER"], data["ID_PRODUCT"])
         messages = {
-            0: "Compra realizada con éxito.",
-            1: "Puntos insuficientes.",
-            2: "Usuario o producto no encontrado."
+            0: "Compra exitosa.",        # Success
+            1: "Puntos insuficientes.",  # Insufficient points
+            2: "Cantidad insuficiente.", # Not enough quantity
+            3: "Usuario o producto no encontrado." # User or product not found
         }
-
-        response = jsonify({"message": messages.get(status, "Unknown status code.")})
-        response.status_code = 200
-    except:
-        response = jsonify({"message": "ID_PRODUCT not provided or error"})
+        response = jsonify({"message": messages.get(status, "Código de estado desconocido.")})
     
+        # Set the status code based on the DB response
+        if status == 0:
+            response.status_code = 200  # Success
+        elif status == 1:
+            response.status_code = 400  # Bad Request for insufficient points
+        elif status == 2:
+            response.status_code = 400  # Bad Request for not enough quantity
+        elif status == 3:
+            response.status_code = 404  # Not Found for user or product not found
+        else:
+            response.status_code = 500  # Internal Server Error for unknown status
+
+    except:
+        response = jsonify({"message": "ID_PRODUCT o ID_USER no proporcionado o error"})
+        response.status_code = 500  # Internal Server Error for exceptions
+
     return response
