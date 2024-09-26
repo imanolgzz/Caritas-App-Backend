@@ -59,6 +59,18 @@ def products():
                     type: string
                     example: "No se encontraron productos"
     """
+    products = DB.store()
+
+    if products:
+        response = jsonify(products)
+        response.status_code = 200
+        return response
+
+    else:
+        response = jsonify({ "message": "Error loggin in" })
+        response.status_code = 400
+        return response
+
 
 @store_routes.route("/redeem", methods=["POST"])
 def redeem():
