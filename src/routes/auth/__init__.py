@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from util.jwt import write_token, validate_token
 from util.db_connection import DB
+from util.hashing import hashPassword
 
 auth_routes = Blueprint("auth", __name__)
 
@@ -64,8 +65,8 @@ def login():
 						example: User not found
 	"""
 	data = request.get_json()
-	# Harcodear password también
-	if DB.login(data["username"], data["password"]):
+	hashedPassword = hashPassword(data["password"])
+	if DB.login(data["username"], hashedPassword):
 		try:
 			token = write_token(data)
 			response = jsonify({"message": "Success", "JWT_Token": token.decode("UTF-8")})
@@ -175,8 +176,11 @@ def register():
 		if alreadyExists:
 			return jsonify({"message": "User already exists"}), 400
 		# register the user
+
+		hashedPassword = hashPassword(password)
+
 		with DB.cnx.cursor(as_dict=True) as cursor:
-			cursor.callproc('RegisterUser', (username, password, name, first_lastname, second_lastname, "NULL", 0, 0, 0))
+			cursor.callproc('RegisterUser', (username, hashPassword, name, first_lastname, second_lastname, "NULL", 0, 0, 0))
 			message = (cursor.fetchall()[0]['Message'])
 			print(message)
 			if message != "User registered":
