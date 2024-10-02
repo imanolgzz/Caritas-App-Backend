@@ -180,7 +180,7 @@ def register():
 		hashedPassword = hashPassword(password)
 
 		with DB.cnx.cursor(as_dict=True) as cursor:
-			cursor.callproc('RegisterUser', (username, hashPassword, name, first_lastname, second_lastname, "NULL", 0, 0, 0))
+			cursor.callproc('RegisterUser', (username, hashedPassword, name, first_lastname, second_lastname, "NULL", 0, 0, 0))
 			message = (cursor.fetchall()[0]['Message'])
 			print(message)
 			if message != "User registered":
