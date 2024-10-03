@@ -28,6 +28,6 @@ def initialize_app():
   
   from .events import event_routes
   app.register_blueprint(event_routes, url_prefix="/api/events")
-  
+
   return app
 
