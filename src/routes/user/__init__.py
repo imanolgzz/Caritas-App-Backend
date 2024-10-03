@@ -53,10 +53,14 @@ def respuestas():
 		print(eventos)
 		return eventos
 	
-@user_routes.route("/usuario", methods=["GET"])
+@user_routes.route("/usuario", methods=["POST"])
 def getUsuario():
-	with DB.cnx.cursor(as_dict=True) as cursor:
-		cursor.callproc("CheckLogin")
-		user = cursor.fetchall()
-		print(user)
-		return user
+    data = request.get_json()
+    correo = data.get("CORREO")
+    password = data.get("PASSWORD")
+
+    with DB.cnx.cursor(as_dict=True) as cursor:
+        cursor.callproc("CheckLogin", (correo, password))
+        user = cursor.fetchall()
+        print(user)
+        return jsonify(user)
