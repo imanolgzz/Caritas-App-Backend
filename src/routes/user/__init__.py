@@ -55,3 +55,8 @@ def respuestas():
 	
 @user_routes.route("/usuario", methods=["GET"])
 def getUsuario():
+	with DB.cnx.cursor(as_dict=True) as cursor:
+		cursor.callproc("GetUsuario")
+		user = cursor.fetchall()
+		print(user)
+		return user
