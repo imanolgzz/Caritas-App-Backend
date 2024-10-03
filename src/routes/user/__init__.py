@@ -52,3 +52,6 @@ def respuestas():
 		eventos = cursor.fetchall()
 		print(eventos)
 		return eventos
+	
+@user_routes.route("/usuario", methods=["GET"])
+def getUsuario():

@@ -5,24 +5,24 @@ attendance_routes = Blueprint("attendance", __name__)
 
 @attendance_routes.route("/attendance", methods=["POST"])
 def attendance():
-	"""
+    """
 	Realiza el registro de asistencia de un usuario a un evento determinado.
 	---
 	parameters:
 		- in: body
-		  name: ID_USUARIO
-		  description: ID_USUARIO 
+		  ID_USUARIO: ID_USER
+		  description: ID usuario
 		  schema:
 		  	type: object
 			required:
-				- ID_USUARIO
-				- ID_EVENTO
+				- USER ID
+				- EVENT ID
 			properties:
-				ID_USUARIO:
+				ID_USER:
 					type: int
 					description: ID del usuario
 					example: 1
-				ID_EVENTO:
+				ID_EVENT:
 					type: int
 					description: ID del evento al que se estará registrando
 					example: 1
@@ -49,8 +49,8 @@ def attendance():
 						type: string
 						example: Error en conexión
 		
-		404:
-		  description: El evento ya está registrado
+		400:
+		  description: Evento o usuario no válido
 		  content:
 			application/json:
 			  schema:
@@ -60,19 +60,20 @@ def attendance():
 						type: string
 						example: ID de usuario o evento no válido
 	"""
-	data = request.get_json()
 
-	if DB.eventAttendance(data["ID_USUARIO"], data["ID_EVENTO"]):
-			try:
-					response = jsonify({"message":"Usuario registrado con éxito"})
-					response.status_code = 200
-					return response
-			
-			except:
-					response = jsonify({"message":"Error en registrar usuario"})
-					response.status_code = 400
-					return response 
-	else:
-			response = jsonify({"message":"El evento ya está registrado"})
-			response.status_code = 404
-			return response
+    data = request.get_json()
+
+    if DB.eventAttendance(data["ID_USUARIO"], data["ID_EVENTO"]):
+        try:
+            response = jsonify({"message":"Usuario registrado con éxito"})
+            response.status_code = 200
+            return response
+        
+        except:
+            response = jsonify({"message":"Error en registrar usuario"})
+            response.status_code = 400
+            return response 
+    else:
+        response = jsonify({"message":"Evento no encontrado"})
+        response.status_code = 400
+        return response
