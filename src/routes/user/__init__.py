@@ -57,10 +57,9 @@ def respuestas():
 def getUsuario():
     data = request.get_json()
     correo = data.get("CORREO")
-    password = data.get("PASSWORD")
 
     with DB.cnx.cursor(as_dict=True) as cursor:
-        cursor.callproc("CheckLogin", (correo, password))
+        cursor.callproc("GetUsuario", (correo))
         user = cursor.fetchall()
         print(user)
         return jsonify(user)

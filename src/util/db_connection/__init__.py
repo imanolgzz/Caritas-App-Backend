@@ -81,7 +81,7 @@ class MSSQLDB:
 
     def getUsuario(self,CORREO):
         with self.cnx.cursor(as_dict = True) as cursor:
-            cursor.callproc("CheckLogin",(CORREO))
+            cursor.callproc("GetUsuario",(CORREO))
             results = cursor.fetchall()
             return results
 
