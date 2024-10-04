@@ -77,7 +77,7 @@ def login():
 			response.status_code = 400
 			return response	
 	else:
-		response = jsonify({"message": "User not found"})
+		response = jsonify({"message": "Invalid email or password"})
 		response.status_code = 404
 		return response
 

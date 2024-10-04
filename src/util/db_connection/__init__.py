@@ -33,9 +33,9 @@ class MSSQLDB:
             import sys
             sys.exit(f"Can not connect to mssql server on {self.mssql_params['DB_HOST']}: {e}")
 
-    def login(self, user = "Adrian", password="Adrian"):
+    def login(self, username = "Adrian", password="Adrian"):
         with self.cnx.cursor(as_dict=True) as cursor:
-            cursor.callproc('CheckLogin', (user, password))
+            cursor.callproc('CheckLogin', (username, password))
             message = (cursor.fetchall()[0]['Message'])
             print(message)
             if message == "Invalid email or password":
@@ -81,7 +81,7 @@ class MSSQLDB:
 
     def getUsuario(self,CORREO):
         with self.cnx.cursor(as_dict = True) as cursor:
-            cursor.callproc("GetUsuario",(CORREO))
+            cursor.callproc("GetUsuario",(CORREO,))
             results = cursor.fetchall()
             return results
 
