@@ -8,7 +8,7 @@ auth_routes = Blueprint("auth", __name__)
 @auth_routes.route("/login", methods=["POST"])
 def login():
 	"""
-	Verifica que el usuario exsista en la base de datos y regresa el JWT adecuado
+	Verifica que el usuario exista en la base de datos y regresa el JWT adecuado
 	---
 	parameters:
 		- in: body
