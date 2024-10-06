@@ -79,9 +79,10 @@ class MSSQLDB:
             print(f"An error occurred: {e}")
             return None  # or some default value or error message 
 
-    def getUser(self,CORREO,PASS):
+    def getUsuario(self,CORREO):
         with self.cnx.cursor(as_dict = True) as cursor:
-            cursor.callproc("GetUsuario",(CORREO,PASS))
-    
+            cursor.callproc("GetUsuario",(CORREO))
+            results = cursor.fetchall()
+            return results
 
 DB = MSSQLDB()

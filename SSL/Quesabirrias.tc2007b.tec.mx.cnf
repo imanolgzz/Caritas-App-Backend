@@ -1,0 +1,25 @@
+#
+# Quesabirrias.tc2007b.tec.mx.cnf
+#
+
+[ req ]
+prompt = no
+distinguished_name = Quesabirrias_tc2007b_mx
+req_extensions = v3_req
+[ Quesabirrias_tc2007b_mx ]
+commonName = Quesabirrias.tc2007b.tec.mx
+stateOrProvinceName = NL
+
+Laboratorio de redes y seguridad TC2007B – OpenSSL
+countryName = MX
+emailAddress = Quesabirrias@tc2007b.tec.mx
+organizationName = TC2007B
+organizationalUnitName = Quesabirrias
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+extendedKeyUsage = serverAuth,clientAuth
+[ alt_names ]
+DNS.0 = Quesabirrias.tc2007b.tec.mx
+
