@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from flasgger import Swagger
 
 def initialize_app():
-  load_dotenv()
   app = Flask(__name__)
   
   swagger = Swagger(app, template={
