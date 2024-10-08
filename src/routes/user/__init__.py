@@ -3,9 +3,8 @@ from util.jwt import validate_token
 from util.db_connection import DB
 
 user_routes = Blueprint("user", __name__)
-'''
-@user_routes.before_request
 
+@user_routes.before_request
 def verify_jwt_token():
 	data = request.get_json()
 	print(data)
@@ -22,8 +21,7 @@ def verify_jwt_token():
 	except:
 		response = jsonify({"error": "anauthorized"})
 	return response
-		response.status_code = 401
-'''
+
 @user_routes.route("/eventosFuturos", methods=["GET"])
 def eventos():
 	try: 
