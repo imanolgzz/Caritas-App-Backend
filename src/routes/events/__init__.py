@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from util.jwt import validate_token
 from util.db_connection import DB
+from util.logs import LOGGER
 
 event_routes = Blueprint("events", __name__)
 @event_routes.route("/eventosFuturos", methods=["GET"])
@@ -73,6 +74,7 @@ def events():
 								type: string
 								example: "No hay eventos próximos"
 	"""
+	LOGGER.info("Requested events from ip - {} using {}".format(request.remote_addr, request.user_agent))
 	events = DB.eventosFuturos()
 	if events:
 		response = jsonify(events)

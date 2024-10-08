@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from util.jwt import write_token, validate_token
 from util.db_connection import DB
 from util.hashing import hashPassword
+from util.logs import LOGGER
 
 auth_routes = Blueprint("auth", __name__)
 
@@ -64,6 +65,7 @@ def login():
 						type: string
 						example: User not found
 	"""
+	LOGGER.info("Requested login from ip - {} using {}".format(request.remote_addr, request.user_agent))
 	data = request.get_json()
 	hashedPassword = hashPassword(data["password"])
 	if DB.login(data["username"], hashedPassword):
