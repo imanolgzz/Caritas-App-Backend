@@ -63,6 +63,15 @@ class MSSQLDB:
 
             return True
 
+    def getRegisteredEvents(self, ID_USUARIO):
+        with self.cnx.cursor(as_dict=True) as cursor:
+            cursor.callproc("GetEventosAgendadosUsuario", (ID_USUARIO,))
+            eventos = cursor.fetchall()
+            if not eventos:
+                return {"success": False, "message": "El usuario no está registrado en ningún evento"}
+            return {"success": True, "events": eventos}
+
+    
     def redeem(self, USER_ID=31, PRODUCT_ID=1):
         try:
             with self.cnx.cursor(as_dict=True) as cursor:

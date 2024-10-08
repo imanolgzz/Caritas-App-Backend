@@ -28,5 +28,8 @@ def initialize_app():
   from .events import event_routes
   app.register_blueprint(event_routes, url_prefix="/api/events")
 
+  from .registeredEvents import registrados_routes
+  app.register_blueprint(registrados_routes, url_prefix="/api/eventos_registrados")
+
   return app
 
