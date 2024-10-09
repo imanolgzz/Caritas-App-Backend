@@ -31,14 +31,20 @@ class MSSQLDB:
             import sys
             sys.exit(f"Can not connect to mssql server on {self.mssql_params['DB_HOST']}: {e}")
 
-    def login(self, username = "Adrian", password="Adrian"):
-        with self.cnx.cursor(as_dict=True) as cursor:
-            cursor.callproc('CheckLogin', (username, password))
-            message = (cursor.fetchall()[0]['Message'])
-            print(message)
+    def login(self, username="Adrian", password="Adrian"):
+        try:
+            with self.cnx.cursor(as_dict=True) as cursor:
+                cursor.callproc('CheckLogin', (username, password))
+                message = (cursor.fetchall()[0]['Message'])            
             if message == "Invalid email or password":
                 return False
             return True
+        except Exception as e:
+            print(f"Error: {str(e)}")
+        finally:
+            DB.cnx.commit()
+
+        
           
     def store(self):
         with self.cnx.cursor(as_dict=True) as cursor:
