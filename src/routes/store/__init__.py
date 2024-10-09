@@ -166,4 +166,7 @@ def redeem():
         response = jsonify({"message": "ID_PRODUCT o ID_USER no proporcionado o error"})
         response.status_code = 500  # Internal Server Error for exceptions
 
+    finally:
+        DB.cnx.commit()
+
     return response

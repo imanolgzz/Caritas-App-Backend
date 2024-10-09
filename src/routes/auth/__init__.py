@@ -74,14 +74,22 @@ def login():
 			response = jsonify({"message": "Success", "JWT_Token": token.decode("UTF-8")})
 			response.status_code = 200
 			return response
+		
+			
 		except:
 			response = jsonify({"message": "Error loggin in"})
 			response.status_code = 400
 			return response	
+		
+		finally:
+			DB.cnx.commit()
 	else:
 		response = jsonify({"message": "Invalid email or password"})
 		response.status_code = 404
 		return response
+	
+	
+		
 
 
 @auth_routes.route("/register", methods=["POST"])
@@ -175,10 +183,12 @@ def register():
 			if message != False:
 				alreadyExists = True
 		
+
 		if alreadyExists:
 			return jsonify({"message": "User already exists"}), 400
 		# register the user
 
+			
 		hashedPassword = hashPassword(password)
 
 		with DB.cnx.cursor(as_dict=True) as cursor:
@@ -190,6 +200,9 @@ def register():
 		return jsonify({"message": "User registered successfully"}), 200
 	except Exception as e:
 		return jsonify({"message": "Error: " + str(e)}), 500
+
+	finally:
+		DB.cnx.commit()
 
 
 @auth_routes.route("/verify/token")

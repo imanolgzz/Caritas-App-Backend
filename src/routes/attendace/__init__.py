@@ -60,20 +60,22 @@ def attendance():
 						type: string
 						example: ID de usuario o evento no válido
 	"""
-
     data = request.get_json()
 
-    if DB.eventAttendance(data["ID_USUARIO"], data["ID_EVENTO"]):
-        try:
-            response = jsonify({"message":"Usuario registrado con éxito"})
+    try:
+        if DB.eventAttendance(data["ID_USUARIO"], data["ID_EVENTO"]):
+            response = jsonify({"message": "Usuario registrado con éxito"})
             response.status_code = 200
-            return response
-        
-        except:
-            response = jsonify({"message":"Error en registrar usuario"})
+        else:
+            response = jsonify({"message": "ID de usuario o evento no válido"})
             response.status_code = 400
-            return response 
-    else:
-        response = jsonify({"message":"Evento no encontrado"})
+
+        return response
+        
+    except Exception as e:
+        response = jsonify({"message": f"Error en registrar asistencia: {str(e)}"})
         response.status_code = 400
         return response
+
+    finally:
+        DB.cnx.commit()
