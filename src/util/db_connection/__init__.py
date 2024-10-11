@@ -97,5 +97,11 @@ class MSSQLDB:
             cursor.callproc("GetUsuario",(CORREO,))
             results = cursor.fetchall()
         return results
+    
+    def eventosDelMes(self):
+        with self.cnx.cursor(as_dict = True) as cursor:
+            cursor.callproc("GetEventosMesActual",())
+            results = cursor.fetchall()
+        return results
 
 DB = MSSQLDB()
