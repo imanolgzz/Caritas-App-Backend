@@ -146,6 +146,10 @@ def register():
 					type: string
 					description: Dirección del usuario
 					example: Piedras de San Marcos 202
+				zip:
+					type: string
+					description: Código Postal del usuario
+					example: 10429
 	responses:
 		200:
 		  description: Usuario registrado exitosamente
@@ -196,7 +200,6 @@ def register():
 		
 		# validate that the email is not already in use
 		alreadyExists = False
-		email = username
 		with DB.cnx.cursor(as_dict=True) as cursor:
 			cursor.callproc('CheckUserExists', [email])
 			message = (cursor.fetchall()[0]['UserExists'])
@@ -210,7 +213,7 @@ def register():
 		hashedPassword = hashPassword(password)
 
 		with DB.cnx.cursor(as_dict=True) as cursor:
-			cursor.callproc('RegisterUser', (username, hashedPassword, name, first_lastname, second_lastname, Dirección + " CP " + str(zip), 0, 0, 0))
+			cursor.callproc('RegisterUser', (email, hashedPassword, name, first_lastname, second_lastname, address + " CP " + str(zip), 0, 0, 0))
 			message = (cursor.fetchall()[0]['Message'])
 			print(message)
 			if message != "User registered":
