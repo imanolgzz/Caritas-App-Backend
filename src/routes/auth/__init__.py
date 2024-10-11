@@ -105,19 +105,27 @@ def register():
 		  	type: object
 			required:
 				- username
+				- email
 				- password
 				- name
 				- first_lastname
 				- second_lastname
+				- role
+				- address
+				- zip
 			properties:
 				username:
 					type: string
+					description: Identificador del usuario
+					example: user01
+				email:
+					type: string
 					description: Correo Electrónico del usuario
-					example: Imanol@mail.com
+					example: user01@mail.com
 				password:
 					type: string
 					description: Contraseña del usuario
-					example: Imanol@Pass
+					example: user1234
 				name:
 					type: string
 					description: Nombre del usuario
@@ -130,6 +138,14 @@ def register():
 					type: string
 					description: Segundo apellido del usuario
 					example: Solís
+				role:
+					type: string
+					description: Rol del usuario
+					example: Colaborador
+				address:
+					type: string
+					description: Dirección del usuario
+					example: Piedras de San Marcos 202
 	responses:
 		200:
 		  description: Usuario registrado exitosamente
@@ -165,13 +181,17 @@ def register():
 	try:
 		data = request.get_json()
 		username = data["username"]
+		email = data["email"]
 		password = data["password"]
 		name = data["name"]
 		first_lastname = data["first_lastname"]
 		second_lastname = data["second_lastname"]
+		role = data["role"]
+		address = data["address"]
+		zip = data["zip"]
 
 		# validate that all fields are presented
-		if not username or not password or not name or not first_lastname or not second_lastname:
+		if not username or not email or not password or not name or not first_lastname or not second_lastname or not role or not address or not zip:
 			return jsonify({"message": "All fields are required"}), 400
 		
 		# validate that the email is not already in use
@@ -182,17 +202,15 @@ def register():
 			message = (cursor.fetchall()[0]['UserExists'])
 			if message != False:
 				alreadyExists = True
-		
 
 		if alreadyExists:
 			return jsonify({"message": "User already exists"}), 400
 		# register the user
-
 			
 		hashedPassword = hashPassword(password)
 
 		with DB.cnx.cursor(as_dict=True) as cursor:
-			cursor.callproc('RegisterUser', (username, hashedPassword, name, first_lastname, second_lastname, "NULL", 0, 0, 0))
+			cursor.callproc('RegisterUser', (username, hashedPassword, name, first_lastname, second_lastname, Dirección + " CP " + str(zip), 0, 0, 0))
 			message = (cursor.fetchall()[0]['Message'])
 			print(message)
 			if message != "User registered":
