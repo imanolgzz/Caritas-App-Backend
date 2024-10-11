@@ -31,7 +31,7 @@ class MSSQLDB:
             import sys
             sys.exit(f"Can not connect to mssql server on {self.mssql_params['DB_HOST']}: {e}")
 
-    def login(self, username="Adrian", password="Adrian"):
+    def login(self, username, password):
         try:
             with self.cnx.cursor(as_dict=True) as cursor:
                 cursor.callproc('CheckLogin', (username, password))
@@ -44,7 +44,15 @@ class MSSQLDB:
         finally:
             DB.cnx.commit()
 
-        
+    def eventosEstadisticas(self, user_ID):
+        try:
+            with self.cnx.cursor(as_dict=True) as cursor:
+                cursor.callproc('eventosStats', (user_ID))
+                results = cursor.fetchall()
+                print(results)
+                return results
+        except Exception as e:
+            print(f"Error: {str(e)}")    
           
     def store(self):
         with self.cnx.cursor(as_dict=True) as cursor:
