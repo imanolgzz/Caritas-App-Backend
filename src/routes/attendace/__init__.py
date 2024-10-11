@@ -10,19 +10,19 @@ def asistencia():
 	---
 	parameters:
 		- in: body
-		  ID_USUARIO: ID_USER
-		  description: ID_USUARIO
+		  name: Datos
+		  description: Datos
 		  schema:
 		  	type: object
 			required:
-				- USER ID
-				- EVENT ID
+				- ID_USUARIO
+				- ID_EVENTO
 			properties:
-				ID_USER:
+				ID_USUARIO:
 					type: int
 					description: ID del usuario
 					example: 1
-				ID_EVENT:
+				ID_EVENTO:
 					type: int
 					description: ID del evento al que se estará registrando
 					example: 1

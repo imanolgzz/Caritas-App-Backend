@@ -55,11 +55,11 @@ def respuestas():
 	
 @user_routes.route("/usuario", methods=["POST"])
 def getUsuario():
-    data = request.get_json()
-    correo = data.get("CORREO")
 
-    with DB.cnx.cursor(as_dict=True) as cursor:
-        cursor.callproc("GetUsuario", (correo,))
-        user = cursor.fetchall()
-        print(user)
-        return jsonify(user)
+	data = request.get_json()
+	correo = data.get("CORREO")
+	
+	with DB.cnx.cursor(as_dict=True) as cursor:
+		cursor.callproc("GetUsuario", (correo,))
+		user = cursor.fetchall()
+		return jsonify(user)
