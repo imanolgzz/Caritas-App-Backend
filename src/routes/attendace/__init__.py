@@ -3,15 +3,15 @@ from util.db_connection import DB
 
 attendance_routes = Blueprint("attendance", __name__)
 
-@attendance_routes.route("/attendance", methods=["POST"])
-def attendance():
+@attendance_routes.route("/asistencia", methods=["POST"])
+def asistencia():
     """
 	Realiza el registro de asistencia de un usuario a un evento determinado.
 	---
 	parameters:
 		- in: body
 		  ID_USUARIO: ID_USER
-		  description: ID usuario
+		  description: ID_USUARIO
 		  schema:
 		  	type: object
 			required:
@@ -79,3 +79,85 @@ def attendance():
 
     finally:
         DB.cnx.commit()
+        
+
+@attendance_routes.route("/estadisticas/<usuario>", methods=["GET"])
+def estadisticas(usuario):
+    """
+	Obtiene el numero de eventos registrados y eventos asistidos.
+	---
+	responses:
+		200:
+		  description: Estadisticas Obtenidas
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					asistencia:
+						type: int
+						example: 0
+                    
+					falta:
+						type: int
+						example: 0
+		400:
+		  description: Error Inesperado
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: No se pudieron obtener las asistencias
+
+		401:
+		  description: Error
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: No se obtuvo un usuario
+        
+		404:
+			description: Error en obtener asistencias
+			content:
+			application/json:
+				schema:
+				type: object
+				properties:
+					message:
+						type: string
+						example: ID de usuario no válido
+		
+	"""
+    print(usuario)
+    if usuario == '{usuario}' or not usuario:
+        response = jsonify({"message": f"No se obtuvo un usuario"})
+        response.status_code = 401
+        return response
+
+    try:
+        stats = DB.eventosEstadisticas(usuario)
+        print(stats)
+        if stats:
+            response = jsonify(stats)
+            response.status_code = 200
+        else:
+            response = jsonify({"message": "ID de usuario inválido"})
+            response.status_code = 404
+
+        return response
+        
+    except Exception as e:
+        response = jsonify({"message": f"Error en obtener asistencias: {str(e)}"})
+        response.status_code = 400
+        return response
+
+    finally:
+        DB.cnx.commit()
+
