@@ -189,7 +189,7 @@ def registeredEvents():
 
 
 @event_routes.route("/eventosDelMes", methods=["GET"])
-def events():
+def monthlyEvents():
 	"""
 	Obtiene los eventos del mes correspondiente ( Actual).
 	---
@@ -216,7 +216,7 @@ def events():
 									type: string
 									format: date
 									description: Fecha del evento
-									example: "2024-07-15"
+									example: "2024-10-15"
 								LUGAR:
 									type: string
 									description: Lugar del evento
@@ -259,7 +259,7 @@ def events():
 								example: "No hay eventos este mes"
 	"""
 	LOGGER.info("Requested events from ip - {} using {}".format(request.remote_addr, request.user_agent))
-	events = DB.eventosFuturos()
+	events = DB.monthlyEvents()
 	if events:
 		response = jsonify(events)
 		response.status_code = 200

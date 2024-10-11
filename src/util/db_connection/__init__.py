@@ -106,7 +106,7 @@ class MSSQLDB:
             results = cursor.fetchall()
         return results
     
-    def eventosDelMes(self):
+    def monthlyEvents(self):
         with self.cnx.cursor(as_dict = True) as cursor:
             cursor.callproc("GetEventosMesActual",())
             results = cursor.fetchall()
