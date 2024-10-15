@@ -79,7 +79,88 @@ def asistencia():
 
     finally:
         DB.cnx.commit()
+
+@attendance_routes.route("/confirmarAsistencia", methods=["POST"])
+def confirmarAsistencia():
+    """
+	Realiza el registro de asistencia de un usuario a un evento determinado.
+	---
+	parameters:
+		- in: body
+		  name: Datos
+		  description: Datos
+		  schema:
+		  	type: object
+			required:
+				- ID_USUARIO
+				- ID_EVENTO
+				- PASSWORD_EVENTO
+			properties:
+				ID_USUARIO:
+					type: int
+					description: ID del usuario
+					example: 1
+				ID_EVENTO:
+					type: int
+					description: ID del evento al que se estará registrando
+					example: 1
+				PASSWORD_EVENTO:
+					type: string
+					description: Contraseña del evento
+					example: 1234
+	responses:
+		200:
+		  description: Asistencia validada exitosamente 
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: Success
+
+		400:
+		  description: Error al registrar Asistencia
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: Error en conexión
+		
+		400:
+		  description: Evento o usuario no válido
+		  content:
+			application/json:
+			  schema:
+			  	type: object
+				properties:
+					message:
+						type: string
+						example: ID de usuario o evento no válido
+	"""
+    data = request.get_json()
+
+    try:
+        if DB.confirmarAsistencia(data["ID_USUARIO"], data["ID_EVENTO"], data["PASSWORD_EVENTO"]):
+            response = jsonify({"message": "Asistencia validada exitosamente"})
+            response.status_code = 200
+        else:
+            response = jsonify({"message": "ID de usuario o evento no válido"})
+            response.status_code = 400
+
+        return response
         
+    except Exception as e:
+        response = jsonify({"message": f"Error al validar la asistencia: {str(e)}"})
+        response.status_code = 400
+        return response
+
+    finally:
+        DB.cnx.commit()
 
 @attendance_routes.route("/estadisticas/<usuario>", methods=["GET"])
 def estadisticas(usuario):

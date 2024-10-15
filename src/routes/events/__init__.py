@@ -270,9 +270,6 @@ def monthlyEvents():
 		response.status_code = 400
 		return response
 
-
-
-
 '''
 3er sprint
 
