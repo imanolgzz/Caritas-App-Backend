@@ -202,11 +202,11 @@ def register():
 		# register the user
 		hashedPassword = hashPassword(password)
 
-		state, message = DB.registerUser(email, hashedPassword, name, first_lastname, second_lastname, address, zip)
+		state, message = DB.registerUser(email, hashedPassword, name, first_lastname, second_lastname, address + " CP " + str(zip), zip)
 		if state:
-			return jsonify({"message": "User registered successfully " + message}), 200
+			return jsonify({"message":  message}), 200
 		else:
-			return jsonify({"message": "Error registering user " + message}), 500
+			return jsonify({"message":  message}), 500
 	except Exception as e:
 		return jsonify({"message": "Error: " + str(e)}), 500
 
