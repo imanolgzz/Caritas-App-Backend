@@ -21,6 +21,7 @@ def add_security_headers(r):
     return r
 
 if __name__ == '__main__':
-	context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-	context.load_cert_chain(getenv("API_CERT_PROD"), getenv("API_KEY_PROD"))
-	app.run(host=getenv("API_HOST_PROD"), port = getenv("API_PORT_PROD"), ssl_context=context)
+	# context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+	# context.load_cert_chain(getenv("API_CERT_PROD"), getenv("API_KEY_PROD"))
+	# app.run(host=getenv("API_HOST_PROD"), port = getenv("API_PORT_PROD"), ssl_context=context)
+    app.run(host=getenv("API_HOST_PROD"), port = getenv("API_PORT_PROD"))

@@ -38,28 +38,14 @@ def eventos():
 
 @user_routes.route("/cuestionarioPorTipo")
 def cuestionario():
-	with DB.cnx.cursor(as_dict=True) as cursor:
-		cursor.callproc('GetQuestionsBasedOnType', (1))
-		eventos = cursor.fetchall()
-		print(eventos)
-		return eventos
+	return DB.cuestionario
 
 @user_routes.route("/opcionRespuestas")
-
 def respuestas():
-	with DB.cnx.cursor(as_dict=True) as cursor:
-		cursor.callproc('GetChoices')
-		eventos = cursor.fetchall()
-		print(eventos)
-		return eventos
+	return DB.respuestas
 	
 @user_routes.route("/usuario", methods=["POST"])
 def getUsuario():
-
 	data = request.get_json()
 	correo = data.get("CORREO")
-	
-	with DB.cnx.cursor(as_dict=True) as cursor:
-		cursor.callproc("GetUsuario", (correo,))
-		user = cursor.fetchall()
-		return jsonify(user)
+	return jsonify(DB.getUsuario(correo))

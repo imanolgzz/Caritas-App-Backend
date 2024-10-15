@@ -77,9 +77,6 @@ def asistencia():
         response.status_code = 400
         return response
 
-    finally:
-        DB.cnx.commit()
-
 @attendance_routes.route("/confirmarAsistencia", methods=["POST"])
 def confirmarAsistencia():
     """
@@ -159,9 +156,6 @@ def confirmarAsistencia():
         response.status_code = 400
         return response
 
-    finally:
-        DB.cnx.commit()
-
 @attendance_routes.route("/estadisticas/<usuario>", methods=["GET"])
 def estadisticas(usuario):
     """
@@ -221,7 +215,6 @@ def estadisticas(usuario):
                   example: ID de usuario no válido
 	"""
     
-    print(usuario)
     if usuario == '{usuario}' or not usuario:
         response = jsonify({"message": f"No se obtuvo un usuario"})
         response.status_code = 401
@@ -229,7 +222,6 @@ def estadisticas(usuario):
 
     try:
         stats = DB.eventosEstadisticas(usuario)
-        print(stats)
         if stats:
             response = jsonify(stats)
             response.status_code = 200

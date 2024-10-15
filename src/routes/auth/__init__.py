@@ -81,8 +81,6 @@ def login():
 			response.status_code = 400
 			return response	
 		
-		finally:
-			DB.cnx.commit()
 	else:
 		response = jsonify({"message": "Invalid email or password"})
 		response.status_code = 404
