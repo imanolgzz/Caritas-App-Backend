@@ -196,33 +196,19 @@ def register():
 		if not username or not email or not password or not name or not first_lastname or not second_lastname or not role or not address or not zip:
 			return jsonify({"message": "All fields are required"}), 400
 		
-		# validate that the email is not already in use
-		alreadyExists = False
-		with DB.cnx.cursor(as_dict=True) as cursor:
-			cursor.callproc('CheckUserExists', [email])
-			message = (cursor.fetchall()[0]['UserExists'])
-			if message != False:
-				alreadyExists = True
-
-		if alreadyExists:
+		if DB.checkUserExists(email):
 			return jsonify({"message": "User already exists"}), 400
+		
 		# register the user
-			
 		hashedPassword = hashPassword(password)
 
-		with DB.cnx.cursor(as_dict=True) as cursor:
-			cursor.callproc('RegisterUser', (email, hashedPassword, name, first_lastname, second_lastname, address + " CP " + str(zip), 0, 0, 0))
-			message = (cursor.fetchall()[0]['Message'])
-			print(message)
-			if message != "User registered":
-				return jsonify({"message": "Error registering user"}), 400
-		return jsonify({"message": "User registered successfully"}), 200
+		state, message = DB.registerUser(email, hashedPassword, name, first_lastname, second_lastname, address + " CP " + str(zip), zip)
+		if state:
+			return jsonify({"message":  message}), 200
+		else:
+			return jsonify({"message":  message}), 500
 	except Exception as e:
 		return jsonify({"message": "Error: " + str(e)}), 500
-
-	finally:
-		DB.cnx.commit()
-
 
 @auth_routes.route("/verify/token")
 def verify():
