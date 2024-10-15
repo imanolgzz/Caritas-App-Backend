@@ -146,10 +146,10 @@ def confirmarAsistencia():
     try:
         state, message = DB.confirmarAsistencia(data["ID_USUARIO"], data["ID_EVENTO"], data["PASSWORD_EVENTO"])
         if state:
-            response = jsonify({"message": "Asistencia confirmada exitosamente"})
+            response = jsonify({"message": message})
             response.status_code = 200
         else:
-            response = jsonify({"message": "ID de usuario o evento no válido"})
+            response = jsonify({"message": message})
             response.status_code = 400
 
         return response
