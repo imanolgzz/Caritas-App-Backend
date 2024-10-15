@@ -183,6 +183,18 @@ class MSSQLDB:
                 cursor.callproc('GetEventosFuturosOrdenadosPorFecha')
                 eventos = cursor.fetchall()
                 return eventos
+    
+    def eventosRegistrados(self, user_id):
+        with self.connect() as conn:
+            with conn.cursor(as_dict=True) as cursor:
+                cursor.callproc('GetEventosAgendadosUsuario', (user_id,))
+                eventos = cursor.fetchall()
+                flag = False
+                if eventos:
+                    flag = True
+                return flag, eventos
+
+
 
 # Initialize DB object
 DB = MSSQLDB()

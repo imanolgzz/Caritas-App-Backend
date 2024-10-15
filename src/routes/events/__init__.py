@@ -165,24 +165,16 @@ def registeredEvents():
     """
     # Obtener el ID_USUARIO del query parameter
     user_id = request.args.get('ID_USUARIO')
-
     # Validar que se haya pasado el parámetro ID_USUARIO
     if not user_id:
         return jsonify({"message": "ID_USUARIO es requerido"}), 400
-
     try:
         # Conexión a la base de datos para llamar al stored procedure
-        with DB.cnx.cursor(as_dict=True) as cursor:
-            cursor.callproc('GetEventosAgendadosUsuario', (user_id,))
-            eventos = cursor.fetchall()
-
-            # Si hay eventos, devolver la lista
-            if eventos:
+        state, eventos = DB.eventosRegistrados(user_id)
+        if state:
                 return jsonify(eventos), 200
-            else:
-                # Si no hay eventos registrados, devolver un error 400
-                return jsonify({"message": "El usuario no está registrado en ningún evento"}), 400
-
+        return jsonify({"message": "El usuario no está registrado en ningún evento"}), 400
+ 
     except Exception as e:
         return jsonify({"message": f"Error en la conexión a la base de datos: {str(e)}"}), 400
 
