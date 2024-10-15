@@ -47,7 +47,7 @@ class MSSQLDB:
     def eventosEstadisticas(self, user_ID):
         try:
             with self.cnx.cursor(as_dict=True) as cursor:
-                cursor.callproc('eventosStats', (user_ID))
+                cursor.callproc('eventosStats', (user_ID,))
                 results = cursor.fetchall()
                 print(results)
                 return results

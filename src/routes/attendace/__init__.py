@@ -143,9 +143,8 @@ def confirmarAsistencia():
 						example: ID de usuario o evento no válido
 	"""
     data = request.get_json()
-
     try:
-				state, message = DB.confirmarAsistencia(data["ID_USUARIO"], data["ID_EVENTO"], data["PASSWORD_EVENTO"])
+        state, message = DB.confirmarAsistencia(data["ID_USUARIO"], data["ID_EVENTO"], data["PASSWORD_EVENTO"])
         if state:
             response = jsonify({"message": "Asistencia confirmada exitosamente"})
             response.status_code = 200
@@ -154,7 +153,7 @@ def confirmarAsistencia():
             response.status_code = 400
 
         return response
-        
+    
     except Exception as e:
         response = jsonify({"message": f"Error al validar la asistencia: {str(e)}"})
         response.status_code = 400
@@ -168,55 +167,60 @@ def estadisticas(usuario):
     """
 	Obtiene el numero de eventos registrados y eventos asistidos.
 	---
-	responses:
-		200:
-		  description: Estadisticas Obtenidas
-		  content:
-			application/json:
-			  schema:
-			  	type: object
-				properties:
-					asistencia:
-						type: int
-						example: 0
-                    
-					falta:
-						type: int
-						example: 0
-		400:
-		  description: Error Inesperado
-		  content:
-			application/json:
-			  schema:
-			  	type: object
-				properties:
-					message:
-						type: string
-						example: No se pudieron obtener las asistencias
-
-		401:
-		  description: Error
-		  content:
-			application/json:
-			  schema:
-			  	type: object
-				properties:
-					message:
-						type: string
-						example: No se obtuvo un usuario
+    parameters:
+      - in: path
+        name: usuario
+        type: string
+        required: true
+        description: ID del usuario para obtener las estadísticas
+        example: 1
         
-		404:
-			description: Error en obtener asistencias
-			content:
-			application/json:
-				schema:
-				type: object
-				properties:
-					message:
-						type: string
-						example: ID de usuario no válido
-		
+    responses:
+      200:
+        description: Estadisticas Obtenidas
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                asistencia:
+                  type: int
+                  example: 0
+                falta:
+                  type: int
+                  example: 0
+      400:
+        description: Error Inesperado
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: No se pudieron obtener las asistencias
+      401:
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: No se obtuvo un usuario
+      404:
+        description: Error en obtener asistencias
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ID de usuario no válido
 	"""
+    
     print(usuario)
     if usuario == '{usuario}' or not usuario:
         response = jsonify({"message": f"No se obtuvo un usuario"})
@@ -239,7 +243,3 @@ def estadisticas(usuario):
         response = jsonify({"message": f"Error en obtener asistencias: {str(e)}"})
         response.status_code = 400
         return response
-
-    finally:
-        DB.cnx.commit()
-
