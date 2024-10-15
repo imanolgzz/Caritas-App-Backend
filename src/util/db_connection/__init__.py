@@ -79,9 +79,10 @@ class MSSQLDB:
         with self.cnx.cursor(as_dict=True) as cursor:
             cursor.callproc("ConfirmarAsistencia", (ID_USUARIO, ID_EVENTO, PASSWORD_EVENTO))
             message = (cursor.fetchone()['Message'])
-            if message == "ID de usuario o evento no válido" or message == "El usuario ya está registrado" or message == "Contraseña incorrecta":
-                return False
-            return True
+            print("Mensaje de la base de datos: " + str(message))
+            if message == "El usuario no está registrado para el evento especificado" or message == "El usuario ya está registrado" or message == "ID de usuario no válido" or message == "ID de evento no válido" or message == "El usuario ya está registrado" or message == "Contraseña incorrecta":
+                return False, message
+            return True, message
 
     def getRegisteredEvents(self, ID_USUARIO):
         with self.cnx.cursor(as_dict=True) as cursor:

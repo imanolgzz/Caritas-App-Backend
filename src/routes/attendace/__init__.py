@@ -99,18 +99,18 @@ def confirmarAsistencia():
 				ID_USUARIO:
 					type: int
 					description: ID del usuario
-					example: 1
+					example: 2
 				ID_EVENTO:
 					type: int
 					description: ID del evento al que se estará registrando
-					example: 1
+					example: 2
 				PASSWORD_EVENTO:
 					type: string
 					description: Contraseña del evento
-					example: 1234
+					example: "PRK002"
 	responses:
 		200:
-		  description: Asistencia validada exitosamente 
+		  description: Asistencia confirmada exitosamente 
 		  content:
 			application/json:
 			  schema:
@@ -145,8 +145,9 @@ def confirmarAsistencia():
     data = request.get_json()
 
     try:
-        if DB.confirmarAsistencia(data["ID_USUARIO"], data["ID_EVENTO"], data["PASSWORD_EVENTO"]):
-            response = jsonify({"message": "Asistencia validada exitosamente"})
+				state, message = DB.confirmarAsistencia(data["ID_USUARIO"], data["ID_EVENTO"], data["PASSWORD_EVENTO"])
+        if state:
+            response = jsonify({"message": "Asistencia confirmada exitosamente"})
             response.status_code = 200
         else:
             response = jsonify({"message": "ID de usuario o evento no válido"})
