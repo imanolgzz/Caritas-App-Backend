@@ -42,6 +42,31 @@ class MSSQLDB:
             print(f"Error: {str(e)}")
             return False
 
+    def checkUserExists(self, email):
+        try:
+            with self.connect() as conn:
+                with conn.cursor(as_dict=True) as cursor:
+			        cursor.callproc('CheckUserExists', [email])
+                    message = cursor.fetchall()[0]['UserExists']
+                    if message != False:
+                        return True
+                    return False
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return True
+
+    def registerUser(self, email, password, name, first_lastname, second_lastname, address, zip):
+        try:
+            with self.connect() as conn:
+                with conn.cursor(as_dict=True) as cursor:
+                    cursor.callproc('RegisterUser', (email, password, name, first_lastname, second_lastname, address, zip, 0, 0, 0))
+                    message = cursor.fetchall()[0]['Message']
+                conn.commit()
+                return message in ["User registered", "Contraseña incorrecta"], message
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return False
+
     def eventosEstadisticas(self, user_ID):
         """Get statistics for events."""
         try:
